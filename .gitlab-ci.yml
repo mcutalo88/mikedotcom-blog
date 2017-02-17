@@ -1,0 +1,27 @@
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  image: golang:1.7.3
+  script:
+    - echo `pwd`
+    - mkdir -p $GOPATH/src/
+    - cp -r /builds/azeroth/blog-service $GOPATH/src/
+    - cd $GOPATH/src/blog-service
+    - go env
+    - go get -insecure
+    - go build
+
+test:
+  stage: test
+  image: golang:1.7.3
+  script:
+    - echo `pwd`
+    - mkdir -p $GOPATH/src/
+    - cp -r /builds/azeroth/blog-service $GOPATH/src/
+    - cd $GOPATH/src/blog-service
+    - go env
+    - go get -insecure
+    - go test ./...
