@@ -15,6 +15,7 @@ import (
 type Blog struct {
   Id      bson.ObjectId `json:"id" bson:"_id,omitempty"`
   Title   string        `json:"title"`
+  Body    []string      `json:"body"`
 }
 
 func GetAllBlogs(c *gin.Context) {
@@ -30,6 +31,18 @@ func GetAllBlogs(c *gin.Context) {
   }
 }
 
+func GetBlog(c *gin.Context) {
+  blog := Blog{}
+  err := db.Db.C("blogs").FindId(bson.ObjectIdHex(c.Param("id"))).One(&blog)
+
+  if err != nil {
+    c.JSON(500, err)
+  } else {
+    c.JSON(200, blog)
+  }
+}
+
+// TODO: Atomic Insert plz ty
 func CreateBlog(c *gin.Context) {
   blog := Blog{}
   c.BindJSON(&blog)

@@ -14,7 +14,6 @@ import (
 	"blog-service/controllers/blogs"
 
 	// Go
-	"log"
 )
 
 var router *gin.Engine
@@ -26,12 +25,10 @@ func init() {
 }
 
 func main() {
-	log.Println("Starting WebServer ...")
   router = gin.Default()
 
-	// Blog
 	router.GET("/blogs", blogs.GetAllBlogs)
-	// router.GET("/blogs/:id", getting)
+	router.GET("/blogs/:id", blogs.GetBlog)
 	router.POST("/blogs", blogs.CreateBlog)
 	// router.PUT("/bogs", putting)
 	// router.DELETE("/blogs/:id", deleting)
