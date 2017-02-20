@@ -7,7 +7,9 @@ import (
 )
 
 type Config struct {
-  GraylogAddr string
+  GraylogAddr  string
+  Mongo_server string
+  Mongo_db     string
 }
 
 var ServiceConfig Config

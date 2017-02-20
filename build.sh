@@ -2,5 +2,5 @@
 
 cd "$(dirname "$0")"
 
-go get
+go get -insecure
 go build -o bin/blog-service
