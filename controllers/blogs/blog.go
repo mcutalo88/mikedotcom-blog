@@ -10,8 +10,10 @@ import (
 
   // Go libs
   "log"
+  "io/ioutil"
 )
 
+var bdoc interface{}
 type Blog struct {
   Id      bson.ObjectId `json:"id" bson:"_id,omitempty"`
   Title   string        `json:"title"`
@@ -53,5 +55,26 @@ func CreateBlog(c *gin.Context) {
     c.JSON(500, err)
   } else {
     c.Status(201)
+  }
+}
+
+func UpdateBlog(c *gin.Context) {
+  updateBody, _ := ioutil.ReadAll(c.Request.Body)
+  bdocerror := bson.UnmarshalJSON([]byte(string(updateBody)), &bdoc)
+
+  if bdocerror != nil {
+    log.Println("Could not parse Request.Body")
+    log.Println(bdocerror)
+  }
+
+  err := db.Db.C("blogs").Update(
+    bson.M{"_id": bson.ObjectIdHex(c.Param("id"))},
+    bson.M{"$set": &bdoc})
+
+  if err != nil {
+    log.Println(err)
+    c.JSON(500, err)
+  } else {
+    c.Status(204)
   }
 }

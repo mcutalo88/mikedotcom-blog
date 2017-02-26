@@ -30,7 +30,7 @@ func main() {
 	router.GET("/blogs", blogs.GetAllBlogs)
 	router.GET("/blogs/:id", blogs.GetBlog)
 	router.POST("/blogs", blogs.CreateBlog)
-	// router.PUT("/bogs", putting)
+	router.PUT("/blogs/:id", blogs.UpdateBlog)
 	// router.DELETE("/blogs/:id", deleting)
 
   router.Run()
