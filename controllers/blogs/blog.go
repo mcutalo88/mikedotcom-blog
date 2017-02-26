@@ -17,6 +17,7 @@ var bdoc interface{}
 type Blog struct {
   Id      bson.ObjectId `json:"id" bson:"_id,omitempty"`
   Title   string        `json:"title"`
+  Desc    string        `json:"desc"`
   Body    []string      `json:"body"`
 }
 
