@@ -14,11 +14,17 @@ import (
 )
 
 var bdoc interface{}
+
 type Blog struct {
-  Id      bson.ObjectId `json:"id" bson:"_id,omitempty"`
-  Title   string        `json:"title"`
-  Desc    string        `json:"desc"`
-  Body    []string      `json:"body"`
+  Id    bson.ObjectId `json:"id" bson:"_id,omitempty"`
+  Title string        `json:"title"`
+  Desc  string        `json:"desc"`
+  Body  []BlogBody    `json:"body"`
+}
+
+type BlogBody struct {
+  Type string `json:"type"`
+  Data string `json:"data"`
 }
 
 func GetAllBlogs(c *gin.Context) {
