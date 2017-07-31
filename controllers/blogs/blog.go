@@ -1,16 +1,15 @@
 package blogs
 
 import (
-  // 3rd Party libs
+  "log"
+  "io/ioutil"
+
+  models "blog-service/models"
+
   "gopkg.in/mgo.v2/bson"
   "github.com/gin-gonic/gin"
 
-  // Private libs
   db "gitlab.azeroth.io/go-pkgs/az-mongo.git"
-
-  // Go libs
-  "log"
-  "io/ioutil"
 )
 
 var bdoc interface{}
@@ -28,9 +27,15 @@ type BlogBody struct {
 }
 
 func GetAllBlogs(c *gin.Context) {
+  pager := c.MustGet("pager").(models.Pager)
   blogs := []Blog{}
 
-  err := db.Db.C("blogs").Find(nil).All(&blogs)
+  err := db.Db.C("blogs").
+                Find(pager.Filter).
+                Skip(pager.Skip).
+                Sort(pager.Sort).
+                Limit(pager.Limit).
+                All(&blogs)
 
   if err != nil {
     log.Println(err)
@@ -41,21 +46,28 @@ func GetAllBlogs(c *gin.Context) {
 }
 
 func GetBlog(c *gin.Context) {
-  blog := Blog{}
-  err := db.Db.C("blogs").FindId(bson.ObjectIdHex(c.Param("id"))).One(&blog)
+  // blog := Blog{}
+  var maps bson.M
+  // err := db.Db.C("blogs").FindId(bson.ObjectIdHex(c.Param("id"))).One(&blog)
+  err := db.Db.C("blogs").FindId(bson.ObjectIdHex(c.Param("id"))).One(&maps)
 
   if err != nil {
+    log.Println(err)
     c.JSON(500, err)
   } else {
-    c.JSON(200, blog)
+    c.JSON(200, maps)
   }
 }
 
 // TODO: Atomic Insert plz ty
 func CreateBlog(c *gin.Context) {
-  blog := Blog{}
-  c.BindJSON(&blog)
-  err := db.Db.C("blogs").Insert(&blog)
+  // blog := Blog{}
+  // c.BindJSON(&blog)
+  // err := db.Db.C("blogs").Insert(&blog)
+
+  var maps bson.M
+  c.BindJSON(&maps)
+  err := db.Db.C("blogs").Insert(&maps)
 
   if err != nil {
     log.Println(err)

@@ -1,0 +1,11 @@
+package: blog-service
+import:
+- package: github.com/BurntSushi/toml
+  version: ~0.3.0
+- package: github.com/gin-gonic/gin
+  version: ~1.2.0
+- package: gitlab.azeroth.io/go-pkgs/az-logger.git
+- package: gitlab.azeroth.io/go-pkgs/az-mongo.git
+- package: gopkg.in/mgo.v2
+  subpackages:
+  - bson
