@@ -28,20 +28,21 @@ type BlogBody struct {
 
 func GetAllBlogs(c *gin.Context) {
   pager := c.MustGet("pager").(models.Pager)
-  blogs := []Blog{}
+  // blogs := []Blog{}
+  var maps []bson.M
 
   err := db.Db.C("blogs").
                 Find(pager.Filter).
                 Skip(pager.Skip).
                 Sort(pager.Sort).
                 Limit(pager.Limit).
-                All(&blogs)
+                All(&maps)
 
   if err != nil {
     log.Println(err)
     c.JSON(500, err)
   } else {
-    c.JSON(200, blogs)
+    c.JSON(200, maps)
   }
 }
 
