@@ -1,6 +1,7 @@
 NAME=mikedotcom-blog
-VERSION=v0.0.2
-DOCKER_IMAGE=registry.azeroth.io/botnetz/$(NAME):$(VERSION)
+VERSION=v1.0.0
+# DOCKER_IMAGE=registry.azeroth.io/botnetz/$(NAME):$(VERSION)
+DOCKER_IMAGE=mcutalo/mikedotcom-blog:$(VERSION)
 
 .PHONY: install build run image push release
 
@@ -12,6 +13,7 @@ build:
 	go build -o bin/$(NAME)
 
 run:
+	export GO_ENV=dev
 	./bin/$(NAME)
 
 image:

@@ -1,0 +1,6 @@
+{
+  "mongo":{
+    "server":"10.0.1.15",
+    "db": "mikedotcomblog"
+  }
+}

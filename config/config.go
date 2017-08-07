@@ -1,28 +1,36 @@
 package config
 
 import (
-    "log"
-    "github.com/BurntSushi/toml"
+  "os"
+  "log"
+  "github.com/spf13/viper"
 )
 
-type Config struct {
-  GraylogAddr  string
-  Mongo_server string
-  Mongo_db     string
-}
+var Vip = viper.New()
 
-var ServiceConfig Config
+func Load() error {
+  Vip.SetConfigType("json")
 
-// Reads info from config file
-func ReadConfig(conf string) {
-  var cnf Config
-  if _, err := toml.DecodeFile(conf, &cnf); err != nil {
-	  log.Println(err)
+  if os.Getenv("GO_ENV") != "" {
+    switch os.Getenv("GO_ENV") {
+      case "dev":
+        Vip.SetConfigName("dev")
+      case "prod":
+        Vip.SetConfigName("prod")
+      default:
+        Vip.SetConfigName("dev")
+    }
+  } else {
+    Vip.SetConfigName("dev")
   }
 
-  ServiceConfig = cnf
-}
+  Vip.AddConfigPath("./config")
+  Vip.AutomaticEnv()
 
-func Get() Config {
-  return ServiceConfig
+  if err := Vip.ReadInConfig(); err == nil {
+      log.Println("Using config file:", Vip.ConfigFileUsed())
+  } else {
+      return err
+  }
+  return nil
 }

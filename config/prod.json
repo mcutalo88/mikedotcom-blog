@@ -1,0 +1,6 @@
+{
+  "mongo":{
+    "server":"mongodb",
+    "db": "mikedotcomblog"
+  }
+}
