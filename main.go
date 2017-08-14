@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"log"
 	"blog-service/config"
 	"blog-service/controllers/blogs"
@@ -25,7 +26,10 @@ func init() {
 func main() {
   router = gin.Default()
 
-	router.Use(middleware.CORSMiddleware)
+	if os.Getenv("GO_ENV") != "" && os.Getenv("GO_ENV") == "dev" {
+		router.Use(middleware.CORSMiddleware)
+	}
+
 	router.Use(middleware.GenericPageFilterSearchSortLimit)
 
 	router.GET("/blogs", blogs.GetAllBlogs)

@@ -1,5 +1,7 @@
 NAME=mikedotcom-blog
-VERSION=v1.0.0
+# VERSION := $(shell git describe --abbrev=0 HEAD)
+VERSION := $(shell git name-rev --tags --name-only $(shell git rev-parse HEAD))
+
 # DOCKER_IMAGE=registry.azeroth.io/botnetz/$(NAME):$(VERSION)
 DOCKER_IMAGE=mcutalo/mikedotcom-blog:$(VERSION)
 

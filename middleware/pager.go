@@ -43,6 +43,7 @@ import (
  */
 func GenericPageFilterSearchSortLimit(c *gin.Context) {
 	pager := models.Pager{}
+  pager.Filter = bson.M{}
 
 	// Sort
 	if c.Query("sort") != "" {
@@ -78,15 +79,27 @@ func GenericPageFilterSearchSortLimit(c *gin.Context) {
 	// Search
 	if c.Query("search") != "" {
 		searchArgs := strings.Split(c.Query("search"), ":")
-		pager.Search = bson.M{ searchArgs[0]: &bson.RegEx{Pattern: searchArgs[1], Options: "i"} }
-	} else {
-		pager.Search = nil
+		pager.Filter[searchArgs[0]] = &bson.RegEx{Pattern: searchArgs[1], Options: "i"}
 	}
 
 	// Filter
+	// field : type : value
 	if c.Query("filter") != "" {
-		filterArgs := strings.Split(c.Query("filter"), ":")
-		pager.Filter = bson.M{ filterArgs[0]: filterArgs[1] }
+    splitFilter := strings.Split(c.Query("filter"), ",")
+
+    for _, f := range splitFilter {
+		  filter := strings.Split(f, ":")
+      switch filter[1] {
+        case "bool":
+          boolVal, _ := strconv.ParseBool(filter[2])
+          pager.Filter[filter[0]] = boolVal
+        case "int":
+          intVal, _ := strconv.Atoi(filter[2])
+          pager.Filter[filter[0]] = int(intVal)
+        default:
+          pager.Filter[filter[0]] = filter[2]
+      }
+    }
 	} else {
 		pager.Filter = nil
 	}
